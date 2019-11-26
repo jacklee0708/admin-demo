@@ -17,11 +17,6 @@ const routes = [
     path: '/home',
     name: 'home',
     component: () => import('../views/home/Home.vue')
-  },
-  {
-    path: '/test',
-    name: 'test',
-    component: () => import('../views/test/Test.vue')
   }
 ]
 
@@ -35,7 +30,6 @@ router.beforeEach((to, from, next) => {
     next()
   } else {
     const token = sessionStorage.getItem('token')
-    console.log(token)
     if (token) {
       next()
     } else {

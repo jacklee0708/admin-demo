@@ -9,6 +9,7 @@ const instance = axios.create({
 //请求拦截
 instance.interceptors.request.use(config => {
   // Do something
+  config.headers.Authorization = sessionStorage.getItem('token')
   return config
 }, err => {
   // Do something

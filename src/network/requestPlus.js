@@ -1,7 +1,8 @@
 /*
  * request加强版!哈哈哈
  * 我加入了elementUI的loading动画和message提示
- * 如果你不需要这些东西，那么我建议你使用request.js
+ * 我知道我写的很烂，所以如果你不需要这些东西
+ * 那么我建议你使用request.js
  */
 
 import axios from 'axios'
@@ -15,6 +16,7 @@ const instance = axios.create({
 
 //请求拦截
 instance.interceptors.request.use(config => {
+  config.headers.Authorization = sessionStorage.getItem('token')
   // 发送请求时，显示loading动画
   startLoading()
   return config
