@@ -20,7 +20,6 @@ Vue.use(Button)
 Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Input)
-Vue.prototype.$message = Message
 Vue.use(Container)
 Vue.use(Header)
 Vue.use(Aside)
@@ -29,4 +28,5 @@ Vue.use(Menu)
 Vue.use(Submenu)
 Vue.use(MenuItem)
 Vue.use(MenuItemGroup)
+Vue.prototype.$message = Message
 

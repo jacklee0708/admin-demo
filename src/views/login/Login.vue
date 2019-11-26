@@ -46,7 +46,7 @@
           if (res.status !== 200) {
             this.$message.error('登录失败!')
           } else {
-            this.$message.success('登录成功~')
+            this.$message.success('登录成功')
             sessionStorage.setItem('token', res.token)
             this.$router.replace('/home')
           }

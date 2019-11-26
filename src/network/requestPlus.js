@@ -17,6 +17,7 @@ const instance = axios.create({
 //请求拦截
 instance.interceptors.request.use(config => {
   config.headers.Authorization = sessionStorage.getItem('token')
+
   // 发送请求时，显示loading动画
   startLoading()
   return config

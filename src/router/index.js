@@ -2,7 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
-
 const routes = [
   {
     path: '/',
@@ -19,12 +18,10 @@ const routes = [
     component: () => import('../views/home/Home.vue')
   }
 ]
-
 const router = new VueRouter({
   routes,
   mode: 'history'
 })
-
 router.beforeEach((to, from, next) => {
   if (to.path === '/login') {
     next()
@@ -37,5 +34,4 @@ router.beforeEach((to, from, next) => {
     }
   }
 })
-
 export default router
