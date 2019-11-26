@@ -15,7 +15,25 @@ const routes = [
   {
     path: '/home',
     name: 'home',
-    component: () => import('../views/home/Home.vue')
+    component: () => import('../views/home/Home.vue'),
+    redirect: '/welcome',
+    children: [
+      {
+        path: '/welcome',
+        name: 'welcome',
+        component: () => import('../views/home/welcome/Welcome.vue')
+      },
+      {
+        path: '/staff',
+        name: 'staff',
+        component: () => import('../views/home/staff/StaffList.vue')
+      },
+      {
+        path: '/role',
+        name: 'role',
+        component: () => import('../views/home/role/RoleList.vue')
+      }
+    ]
   }
 ]
 const router = new VueRouter({

@@ -12,7 +12,9 @@ import {
   Menu,
   Submenu,
   MenuItem,
-  MenuItemGroup
+  MenuItemGroup,
+  Breadcrumb,
+  BreadcrumbItem
 } from 'element-ui'
 
 
@@ -29,4 +31,6 @@ Vue.use(Submenu)
 Vue.use(MenuItem)
 Vue.use(MenuItemGroup)
 Vue.prototype.$message = Message
+Vue.use(Breadcrumb)
+Vue.use(BreadcrumbItem)
 
