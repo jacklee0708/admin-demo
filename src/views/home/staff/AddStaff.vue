@@ -100,6 +100,9 @@
             return false
           }
         })
+      },
+      resetWindow() {
+        this.$refs.addForm.resetFields()
       }
     }
   }

@@ -44,7 +44,7 @@
         :total="total">
       </el-pagination>
     </el-card>
-    <el-dialog title="提示" :visible.sync="dialogVisible" width="50%" center>
+    <el-dialog title="提示" :visible.sync="dialogVisible" width="50%" center @close="resetWindow">
       <add-staff :dialogVisible="dialogVisible" @closeWindow="closeWindow"/>
     </el-dialog>
   </div>
@@ -108,6 +108,9 @@
       },
       closeWindow() {
         this.dialogVisible = false
+      },
+      resetWindow(){
+        this.$children[2].$children[0].resetWindow()
       }
     }
   }
