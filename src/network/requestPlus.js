@@ -1,7 +1,7 @@
 /*
  * request加强版!哈哈哈
  * 我加入了elementUI的loading动画和message提示
- * 我知道我写的很烂，所以如果你不需要这些东西
+ * 我写的很烂，所以如果你不需要这些东西
  * 那么我建议你使用request.js
  */
 
@@ -10,7 +10,7 @@ import {Message, Loading} from 'element-ui'
 
 //创建axios实例并配置基础数据，如baseURL，timeout，headers等等
 const instance = axios.create({
-  baseURL: 'http://rap2api.taobao.org/app/mock/236992/',
+  baseURL: 'http://rap2api.taobao.org/app/mock/237790/',
   timeout: 5000
 })
 
@@ -62,7 +62,7 @@ const request = {
         url,
         params,
       }).then(res => {
-        resolve(res.data)
+        resolve(res)
       }).catch(err => {
         reject(err)
       })
@@ -79,7 +79,7 @@ const request = {
         url,
         data,
       }).then((res) => {
-        resolve(res.data)
+        resolve(res)
       }).catch((err) => {
         reject(err)
       })

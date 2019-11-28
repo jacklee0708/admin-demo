@@ -51,7 +51,6 @@
             this.$router.replace('/home')
           }
         } catch (err) {
-          console.log(err)
         }
       }
     },

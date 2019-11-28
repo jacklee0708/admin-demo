@@ -14,7 +14,18 @@ import {
   MenuItem,
   MenuItemGroup,
   Breadcrumb,
-  BreadcrumbItem
+  BreadcrumbItem,
+  Card,
+  Row,
+  Col,
+  Table,
+  TableColumn,
+  Switch,
+  Tooltip,
+  Pagination,
+  Dialog,
+  Select,
+  Option
 } from 'element-ui'
 
 
@@ -33,4 +44,14 @@ Vue.use(MenuItemGroup)
 Vue.prototype.$message = Message
 Vue.use(Breadcrumb)
 Vue.use(BreadcrumbItem)
-
+Vue.use(Card)
+Vue.use(Row)
+Vue.use(Col)
+Vue.use(Table)
+Vue.use(TableColumn)
+Vue.use(Switch)
+Vue.use(Tooltip)
+Vue.use(Pagination)
+Vue.use(Dialog)
+Vue.use(Select)
+Vue.use(Option)
