@@ -16,7 +16,7 @@
              :default-active="$route.path">
       <el-submenu v-for="item in menuList"
                   :key="item.id"
-                  :index="item.order">
+                  :index="item.menuName">
         <template slot="title">
           <i :class="item.menuIcon"></i>
           <span>{{item.menuName}}</span>

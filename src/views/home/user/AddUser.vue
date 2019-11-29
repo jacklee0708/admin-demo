@@ -2,13 +2,13 @@
   <div>
     <el-form :model="addForm" :rules="rules" ref="addForm" label-width="100px">
       <el-form-item label="员工姓名" prop="name">
-        <el-input v-model="addForm.name"></el-input>
+        <el-input v-model="addForm.name" clearable :disabled="isModify"></el-input>
       </el-form-item>
-      <el-form-item label="登录账号" prop="account">
-        <el-input v-model="addForm.account"></el-input>
+      <el-form-item label="登录账号" prop="account" v-if="!isModify">
+        <el-input v-model="addForm.account" clearable></el-input>
       </el-form-item>
-      <el-form-item label="登录密码" prop="secret">
-        <el-input v-model="addForm.secret"></el-input>
+      <el-form-item label="登录密码" prop="secret" v-if="!isModify">
+        <el-input v-model="addForm.secret" clearable></el-input>
       </el-form-item>
       <el-form-item label="所属角色" prop="role" width="100px">
         <el-select v-model="addForm.role" placeholder="所属角色" class="el-input">
@@ -18,10 +18,10 @@
         </el-select>
       </el-form-item>
       <el-form-item label="手机" prop="phone">
-        <el-input v-model="addForm.phone"></el-input>
+        <el-input v-model="addForm.phone" clearable></el-input>
       </el-form-item>
       <el-form-item label="邮箱" prop="email">
-        <el-input v-model="addForm.email"></el-input>
+        <el-input v-model="addForm.email" clearable></el-input>
       </el-form-item>
     </el-form>
     <div class="footer">
@@ -33,7 +33,27 @@
 
 <script>
   export default {
-    name: "AddStaff",
+    name: "AddUser",
+    props: {
+      dialogVisible: {
+        type: Boolean,
+        default() {
+          return false
+        }
+      },
+      isModify: {
+        type: Boolean,
+        default() {
+          return false
+        }
+      },
+      selectedRow: {
+        type: Object,
+        default() {
+          return {}
+        }
+      }
+    },
     data() {
       const checkPhone = (rule, value, cb) => {
         const regPhone = /^1[3456789]\d{9}$/
@@ -51,8 +71,16 @@
           cb("请输入正确的邮箱地址")
         }
       }
+
+      const checkRepeat = (rule, value, cb) => {
+        if (value !== 'admin') {
+          return cb()
+        } else {
+          cb("账号已存在")
+        }
+      }
       return {
-        addForm: {},
+        addForm: this.isModify ? this.selectedRow : {},
         rules: {
           name: [
             {required: true, message: '请输入员工姓名', trigger: 'blur'},
@@ -60,7 +88,8 @@
           ],
           account: [
             {required: true, message: '请输入登录账号', trigger: 'blur'},
-            {min: 3, max: 12, message: '长度在 3 到 12 个字符', trigger: 'blur'}
+            {min: 3, max: 12, message: '长度在 3 到 12 个字符', trigger: 'blur'},
+            {validator: checkRepeat, trigger: 'blur'}
           ],
           secret: [
             {required: true, message: '请输入登录密码', trigger: 'blur'},
@@ -78,12 +107,9 @@
         }
       }
     },
-    props: {
-      dialogVisible: {
-        type: Boolean,
-        default() {
-          return false
-        }
+    watch: {
+      selectedRow: function (newVal) {
+        this.addForm = newVal
       }
     },
     methods: {
@@ -91,18 +117,21 @@
         this.$emit("closeWindow")
       },
       submitForm(formName) {
-
         this.$refs[formName].validate(valid => {
           if (valid) {
             this.$emit("closeWindow")
-            this.$message.success("提交成功")
+            if(this.isModify){
+              this.$message.success("修改成功")
+            }else{
+              this.$message.success("新增成功")
+            }
           } else {
             return false
           }
         })
       },
-      resetWindow() {
-        this.$refs.addForm.resetFields()
+      clearValidate() {
+        this.$refs.addForm.clearValidate()
       }
     }
   }
