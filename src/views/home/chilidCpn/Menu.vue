@@ -56,8 +56,8 @@
           this.$router.push({
             path: path,
             query: {
-              itemName: item.menuName,
-              childName: child.menuName
+              menu: item.menuName,
+              subMenu: child.menuName
             }
           })
         }

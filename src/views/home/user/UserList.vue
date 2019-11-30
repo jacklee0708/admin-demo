@@ -2,62 +2,30 @@
   <div class="user-list">
     <crumb :query="$route.query"></crumb>
     <el-card>
-      <el-row :gutter="10">
-        <el-col :span="8">
-          <el-input placeholder="请输入内容" v-model="query.name" clearable @clear="getUserList"
-                    @keyup.enter.native="search">
-            <el-button slot="append" type="primary" icon="el-icon-search" @click="search"></el-button>
-          </el-input>
-        </el-col>
-        <el-col :span="4">
-          <el-button type="primary" @click="AddUser">新增用户</el-button>
-        </el-col>
-      </el-row>
-      <el-table :data="userList" ref="userTable" height="458" style="width: 100%" stripe border>
-        <el-table-column type="index"/>
-        <el-table-column prop="name" label="姓名"/>
-        <el-table-column prop="email" label="邮箱"/>
-        <el-table-column prop="phone" label="手机"/>
-        <el-table-column prop="role" label="角色"/>
-        <el-table-column prop="state" label="状态">
-          <template slot-scope="scope">
-            <el-switch v-model="scope.row.state" @change="userStateChange(scope.row)"/>
-          </template>
-        </el-table-column>
-        <el-table-column prop="" label="操作">
-          <template slot-scope="scope">
-            <el-button type="primary" @click="modifyUserInfo(scope.row)" icon="el-icon-edit" size="mini"></el-button>
-            <el-button type="danger" @click="removeUser()" icon="el-icon-delete" size="mini"></el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="query.page"
-        :page-sizes="[10, 20, 50, 100]"
-        :page-size="query.limit"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total">
-      </el-pagination>
+      <tool-bar/>
+      <user-table :user-list="userList"/>
+      <user-pagination :query="query" :total="total"/>
     </el-card>
-    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="30%" center @close="clearValidate">
-      <add-user :dialogVisible="dialogVisible"
-                 :isModify="isModify"
-                 :selectedRow="selectedRow"
-                 @closeWindow="closeWindow"/>
+    <el-dialog :title="dialogTitle" :visible="dialogVisible" width="30%" center @close="clearValidate">
+      <add-user :isModify="isModify" :selectedRow="selectedRow" @closeWindow="closeWindow"/>
     </el-dialog>
   </div>
 </template>
 
 <script>
   import Crumb from 'components/Crumb'
+  import ToolBar from 'components/ToolBar'
+  import UserTable from './UserTable'
+  import UserPagination from './UserPagination'
   import AddUser from './AddUser'
 
   export default {
     name: "userList",
     components: {
       Crumb,
+      ToolBar,
+      UserTable,
+      UserPagination,
       AddUser
     },
     data() {
@@ -78,11 +46,36 @@
     created() {
       this.getUserList()
     },
-    mounted(){
-      //出现滚动条时，表头和下方内容不对齐，重置表格的布局
-      setTimeout(()=> {
-        this.$refs.userTable.doLayout()
-      },1000)
+    mounted() {
+      //toolbar组件的搜索框被清空时,先重置query中的page，再重新请求数据
+      this.$bus.$on('inputClear', () => {
+        this.query.page = 1
+        this.getUserList()
+      })
+      //toolbar组件的搜索被触发,把传过来的搜索内容赋值给query中的name
+      this.$bus.$on('search', searchVal => {
+        this.query.name = searchVal
+        this.getUserList()
+        this.$message.success('搜索成功，此处为演示')
+      })
+      //toolbar组件的add按钮被点击
+      this.$bus.$on('add', () => {
+        this.addUser()
+      })
+      //usertable组件的修改按钮被点击
+      this.$bus.$on('modifyUserInfo', data => {
+        this.modifyUserInfo(data)
+      })
+      //usertable组件的limit发生改变
+      this.$bus.$on('limitChange', limit => {
+        this.query.limit = limit
+        this.getUserList()
+      })
+      //usertable组件的page发生改变
+      this.$bus.$on('pageChange', page => {
+        this.query.page = page
+        this.getUserList()
+      })
     },
     methods: {
       async getUserList() {
@@ -97,30 +90,17 @@
         } catch (err) {
         }
       },
-      handleSizeChange(limit) {
-        this.query.limit = limit
-        this.getUserList()
-      },
-      handleCurrentChange(page) {
-        this.query.page = page
-        this.getUserList()
-      },
       userStateChange(user) {
         this.$message.success(user.name + "的状态变成了" + user.state)
-      },
-      async search() {
-        const res = await this.$request.get("home/user/search", this.query)
-        this.userList = res.data
-        this.total = res.total
       },
       closeWindow() {
         this.dialogVisible = false
       },
       clearValidate() {
-        //调用孙子组件(addUser.vue)的clearValidate函数
-        this.$children[2].$children[0].clearValidate()
+        //清除组件addUser的表单验证
+        this.$bus.$emit("clearValidate")
       },
-      AddUser() {
+      addUser() {
         this.dialogVisible = true
         this.dialogTitle = "新增用户"
         this.isModify = false
@@ -131,21 +111,6 @@
         this.dialogTitle = "修改用户资料"
         this.isModify = true
         this.selectedRow = user
-      },
-      removeUser(){
-        this.$confirm('删除操作不可逆，确定删除吗?', '提示', {
-          type: 'warning'
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
       }
     }
   }

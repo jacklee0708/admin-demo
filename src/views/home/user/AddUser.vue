@@ -35,12 +35,6 @@
   export default {
     name: "AddUser",
     props: {
-      dialogVisible: {
-        type: Boolean,
-        default() {
-          return false
-        }
-      },
       isModify: {
         type: Boolean,
         default() {
@@ -64,7 +58,7 @@
         }
       }
       const checkEmail = (rule, value, cb) => {
-        const regEmail = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/
+        const regEmail = /^[A-Za-z\d]+[A-Za-z\d\-_\.]*@([A-Za-z\d]+[A-Za-z\d\-]*\.)+[A-Za-z]{2,4}$/
         if (regEmail.test(value)) {
           return cb()
         } else {
@@ -120,19 +114,23 @@
         this.$refs[formName].validate(valid => {
           if (valid) {
             this.$emit("closeWindow")
-            if(this.isModify){
-              this.$message.success("修改成功")
-            }else{
-              this.$message.success("新增成功")
+            if (this.isModify) {
+              this.$message.success("修改成功，此处为演示")
+              //如果是修改，则调用修改的接口
+            } else {
+              this.$message.success("新增成功，此处为演示")
+              //如果是新增，则调用新增的接口
             }
           } else {
             return false
           }
         })
-      },
-      clearValidate() {
-        this.$refs.addForm.clearValidate()
       }
+    },
+    mounted() {
+      this.$bus.$on('clearValidate', () => {
+        this.$refs.addForm.clearValidate()
+      })
     }
   }
 </script>

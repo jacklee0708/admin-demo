@@ -7,6 +7,8 @@ import request from './network/request'
 
 Vue.prototype.$request = request //把封装好的axios添加到vue的原型，以便全局使用
 
+Vue.prototype.$bus = new Vue()//事件总线
+
 Vue.config.productionTip = false
 
 new Vue({
